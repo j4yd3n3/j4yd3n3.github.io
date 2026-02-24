@@ -1,0 +1,296 @@
+<!-- Hacker text effect on post titles. -->
+<script defer>
+  (function() {
+    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*';
+    var heading = document.querySelector('#single-header h1');
+    if (!heading) return;
+
+    var text = heading.textContent.trim();
+    var len = text.length;
+    var revealed = 0;
+    var interval = 65;
+    var scrambleInterval = 30;
+
+    // Set up the HTML structure
+    heading.innerHTML =
+      '<span class="hacker-revealed"></span>' +
+      '<span class="hacker-cursor">|</span>' +
+      '<span class="hacker-scramble"></span>';
+
+    var revealedEl = heading.querySelector('.hacker-revealed');
+    var cursorEl = heading.querySelector('.hacker-cursor');
+    var scrambleEl = heading.querySelector('.hacker-scramble');
+
+    // Scramble the unrevealed portion at a fast rate
+    var scrambleTimer = setInterval(function() {
+      var remaining = len - revealed;
+      if (remaining <= 0) {
+        scrambleEl.textContent = '';
+        clearInterval(scrambleTimer);
+        return;
+      }
+      var s = '';
+      for (var i = 0; i < remaining; i++) {
+        s += chars[Math.floor(Math.random() * chars.length)];
+      }
+      scrambleEl.textContent = s;
+    }, scrambleInterval);
+
+    // Reveal one character at a time
+    var revealTimer = setInterval(function() {
+      if (revealed < len) {
+        revealed++;
+        revealedEl.textContent = text.slice(0, revealed);
+      } else {
+        clearInterval(revealTimer);
+        // Cursor blink that gradually slows down
+        var blinkDelay = 600;
+        var maxDelay = 2400;
+        var visible = true;
+        function blinkCursor() {
+          visible = !visible;
+          cursorEl.style.opacity = visible ? '1' : '0';
+          blinkDelay = Math.min(blinkDelay * 1.08, maxDelay);
+          setTimeout(blinkCursor, blinkDelay);
+        }
+        cursorEl.style.animation = 'none';
+        setTimeout(blinkCursor, blinkDelay);
+      }
+    }, interval);
+  })();
+</script>
+
+<style>
+  .hacker-cursor {
+    color: var(--link);
+    animation: hacker-blink 0.6s step-end infinite;
+  }
+  .hacker-scramble {
+    color: var(--text-dim);
+    opacity: 0.5;
+  }
+  @keyframes hacker-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+</style>
+
+<!-- Shortcuts. -->
+<script defer>
+  document.addEventListener("keydown", function (e) {
+    if (document.activeElement.isContentEditable) {
+      return false;
+    }
+    if (document.activeElement.tagName == "INPUT") {
+      return false;
+    }
+    if (e.altKey || e.ctrlKey || e.shiftKey) {
+      return false;
+    }
+    var key = e.key;
+    if (key === "h") {
+      e.preventDefault();
+      e.stopPropagation();
+      window.location.href = "/";
+    } else if (key === "t") {
+      e.preventDefault();
+      e.stopPropagation();
+      window.location.href = `https://${location.hostname}/tags`;
+    } else if (key === "i") {
+      e.preventDefault();
+      e.stopPropagation();
+      const inputs = document.querySelectorAll("input");
+      for (let i = 0; i < inputs.length; i++) {
+        if (inputs[i].offsetParent !== null) {
+          inputs[i].selectionStart = inputs[i].selectionEnd =
+            inputs[i].value.length;
+          inputs[i].focus();
+          break;
+        }
+      }
+    }
+    return false;
+  });
+</script>
+
+<!-- Dynamic toc. -->
+<script defer>
+  function throttle(fn, wait) {
+    var time = Date.now();
+    return function () {
+      var now = Date.now();
+      if (time + wait - now < 0) {
+        fn();
+        time = now;
+      }
+    };
+  }
+
+  function scrollHandler() {
+    const anchors = Array.from(document.querySelectorAll("body h2, body h3"));
+    var clickLock = false;
+
+    function clearAllActive() {
+      for (var i = 0; i < anchors.length; i++) {
+        var anchorId = anchors[i].getAttribute("id");
+        var link = document.querySelector(
+          '#TableOfContents a[href="#' + anchorId + '"]',
+        );
+        if (link) {
+          link.classList.remove("active-toc");
+        }
+      }
+    }
+
+    function setActive(anchorId) {
+      var link = document.querySelector(
+        '#TableOfContents a[href="#' + anchorId + '"]',
+      );
+      if (link) {
+        link.classList.add("active-toc");
+      }
+    }
+
+    function scrollCallback() {
+      if (clickLock) return;
+
+      var docHeight = document.documentElement.scrollHeight;
+      var winHeight = window.innerHeight;
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+      clearAllActive();
+
+      // If scrolled to bottom, highlight the last heading
+      if (scrollTop + winHeight >= docHeight - 10) {
+        for (var i = anchors.length - 1; i >= 0; i--) {
+          var anchorId = anchors[i].getAttribute("id");
+          if (anchorId) {
+            setActive(anchorId);
+            break;
+          }
+        }
+        return;
+      }
+
+      // Find the last heading whose top has scrolled past the threshold
+      var found = false;
+      for (var i = anchors.length - 1; i >= 0; i--) {
+        var rect = anchors[i].getBoundingClientRect();
+        if (rect.top <= 80) {
+          var anchorId = anchors[i].getAttribute("id");
+          if (anchorId) {
+            setActive(anchorId);
+            found = true;
+            break;
+          }
+        }
+      }
+
+      // If nothing scrolled past yet, highlight the first heading
+      if (!found && anchors.length > 0) {
+        var anchorId = anchors[0].getAttribute("id");
+        if (anchorId) {
+          setActive(anchorId);
+        }
+      }
+    }
+
+    // Handle TOC link clicks — force highlight the clicked item
+    var tocContainer = document.getElementById("TableOfContents");
+    if (tocContainer) {
+      tocContainer.addEventListener("click", function (e) {
+        var link = e.target.closest("a");
+        if (!link) return;
+
+        var href = link.getAttribute("href");
+        if (!href || href.charAt(0) !== "#") return;
+
+        clickLock = true;
+        clearAllActive();
+        link.classList.add("active-toc");
+
+        // Resume scroll-based highlighting after scroll settles
+        setTimeout(function () {
+          clickLock = false;
+        }, 800);
+      });
+    }
+
+    window.addEventListener("scroll", throttle(scrollCallback, 50));
+    // Run once on load
+    scrollCallback();
+  }
+  setTimeout(scrollHandler, 100);
+</script>
+
+<script defer>
+  function getTextContentRecursively(element) {
+    let text = '';
+
+    if (element.nodeType === Node.TEXT_NODE) {
+      return element.textContent || '';
+    }
+
+    for (const child of element.childNodes) {
+      text += getTextContentRecursively(child);
+    }
+
+    return text;
+  }
+
+  function addCopyButtonToCodeBlocks() {
+    // Get all code blocks with a class of "language-*"
+    // const codeBlocks = document.querySelectorAll('code[class^="language-"]');
+    const codeBlocks = document.querySelectorAll(
+      'code[class^="language-"]:not(.output):not([class*="language-console"])',
+    );
+
+    codeBlocks.forEach((codeBlock) => {
+      const pre = codeBlock.parentNode;
+
+      // Create header bar above code block
+      const header = document.createElement("div");
+      header.classList.add("code-header");
+
+      // Language label on the left
+      const classMatch = codeBlock.className.match(/language-(\S+)/);
+      const label = document.createElement("span");
+      label.classList.add("code-label");
+      label.textContent = classMatch ? classMatch[1] : "";
+      header.appendChild(label);
+
+      // Copy button on the right
+      const copyButton = document.createElement("button");
+      copyButton.classList.add("copy-code-button");
+      copyButton.innerHTML = "copy";
+      copyButton.addEventListener("click", () => {
+        const codeToCopy = getTextContentRecursively(codeBlock);
+        navigator.clipboard.writeText(codeToCopy);
+        copyButton.innerHTML = "copied!";
+        setTimeout(() => {
+          copyButton.innerHTML = "copy";
+        }, 1500);
+      });
+      header.appendChild(copyButton);
+
+      pre.before(header);
+
+      // Collapse long code blocks
+      var lineCount = codeBlock.textContent.split("\n").length;
+      if (lineCount > 15) {
+        pre.classList.add("code-collapsible", "code-collapsed");
+        var toggle = document.createElement("button");
+        toggle.classList.add("code-collapse-toggle");
+        toggle.textContent = "show more";
+        toggle.addEventListener("click", function () {
+          var collapsed = pre.classList.toggle("code-collapsed");
+          toggle.textContent = collapsed ? "show more" : "show less";
+        });
+        pre.after(toggle);
+      }
+    });
+  }
+  setTimeout(function () {
+    addCopyButtonToCodeBlocks();
+  }, 100);
+</script>

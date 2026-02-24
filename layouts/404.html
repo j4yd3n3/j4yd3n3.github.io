@@ -1,0 +1,11 @@
+{{ partial "header.html" . }}
+
+<div class="terminal-404">
+  <div class="terminal-prompt">$ curl -I {{ .Site.BaseURL }}this-page</div>
+  <div class="terminal-output">HTTP/1.1 404 Not Found</div>
+  <div class="terminal-prompt">$ cat /var/log/404</div>
+  <div class="terminal-output">bash: page: command not found</div>
+  <div class="terminal-prompt">$ cd <a href="/">~</a><span class="terminal-cursor"></span></div>
+</div>
+
+{{ partial "footer.html" . }}

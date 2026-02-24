@@ -1,0 +1,32 @@
+{{ partial "header.html" . }}
+
+<div class="home-about">
+  {{ .Content }}
+</div>
+
+<div class="timeline-header">
+  <h1>Posts</h1>
+</div>
+
+<div class="timeline">
+  {{ $pages := where .Site.RegularPages "Params.draft" "!=" true }}
+  {{ $pages = where $pages "File.LogicalName" "!=" "about.md" }}
+  {{ range $pages.ByDate.Reverse }}
+  <div class="timeline-item">
+    <div class="timeline-date">{{ .Date.Format "Jan 2, 2006" }}</div>
+    <div class="timeline-content">
+      <a class="timeline-title" href="{{ .RelPermalink }}">{{ .Title }}</a>
+      {{ with .Params.tags }}
+      <span class="timeline-tags">
+        {{ range . }}<a class="timeline-tag" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">#{{ . }}</a>{{ end }}
+      </span>
+      {{ end }}
+      {{ with .Params.summary }}
+      <p class="timeline-summary">{{ . }}</p>
+      {{ end }}
+    </div>
+  </div>
+  {{ end }}
+</div>
+
+{{ partial "footer.html" . }}

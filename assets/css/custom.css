@@ -1,0 +1,387 @@
+/* ===== Theme Color Override ===== */
+
+:root {
+  --link: #cc3333;
+  --link-visited: #b24a4a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --link: #e06060;
+    --link-visited: #c47a7a;
+  }
+}
+
+/* ===== Typography & Post Styling ===== */
+
+body {
+  text-align: left;
+  line-height: 1.7;
+}
+
+main {
+  font-size: 1.05rem;
+}
+
+main p {
+  margin: 1em 0;
+}
+
+main ul,
+main ol {
+  margin: 0.8em 0;
+}
+
+main li {
+  margin-bottom: 0.3em;
+}
+
+/* ===== Home About ===== */
+
+.home-about {
+  margin-top: 1.5em;
+  margin-bottom: 1em;
+  color: var(--text-dim);
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.home-about p {
+  margin: 0.3em 0;
+}
+
+/* ===== Timeline (Home Page) ===== */
+
+.timeline-header h1 {
+  font-size: 1.8em;
+  font-weight: 600;
+  margin-bottom: 0.6em;
+  margin-top: 0.3em;
+  border: none;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 28px;
+  margin-left: 8px;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border-general);
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 1.2em;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -32px;
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  border: 2px solid var(--background, #1b1b1b);
+}
+
+.timeline-date {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-bottom: 0.15em;
+  font-family: monospace;
+}
+
+.timeline-content {
+  padding: 0;
+}
+
+.timeline-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.timeline-title:visited {
+  color: var(--text);
+}
+
+.timeline-title:hover {
+  color: var(--link);
+  text-decoration: underline;
+}
+
+.timeline-tags {
+  display: inline-block;
+  margin-left: 0.6em;
+}
+
+.timeline-tag {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-right: 0.4em;
+  text-decoration: none;
+}
+
+.timeline-tag:visited {
+  color: var(--text-dim);
+}
+
+.timeline-tag:hover {
+  color: var(--link);
+}
+
+.timeline-summary {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  margin-top: 0.3em;
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+/* ===== Code Block Header ===== */
+
+.code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  background: var(--code-border, #2a2a2a);
+  padding: 4px 12px;
+  border-radius: 4px 4px 0 0;
+  margin-bottom: 0;
+}
+
+.code-header + pre {
+  margin-top: 0;
+  border-radius: 0 0 4px 4px;
+}
+
+.code-header .code-label {
+  letter-spacing: 0.03em;
+  opacity: 0.8;
+}
+
+.code-header .copy-code-button {
+  display: inline-block;
+  float: none;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-family: monospace;
+  font-size: 0.75rem;
+  cursor: pointer;
+  animation: none;
+}
+
+.code-header .copy-code-button:hover {
+  color: var(--link);
+}
+
+/* ===== Collapsible Code Blocks ===== */
+
+pre.code-collapsed {
+  max-height: 360px;
+  overflow: hidden;
+  position: relative;
+}
+
+pre.code-collapsed::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(transparent, var(--code-background, #272727));
+  pointer-events: none;
+}
+
+.code-collapse-toggle {
+  display: block;
+  width: 100%;
+  padding: 4px 0;
+  background: var(--code-border, #2a2a2a);
+  border: none;
+  border-radius: 0 0 4px 4px;
+  color: var(--text-dim);
+  font-family: monospace;
+  font-size: 0.75rem;
+  cursor: pointer;
+  margin-top: 0;
+}
+
+.code-collapse-toggle:hover {
+  color: var(--link);
+}
+
+/* ===== Terminal 404 Page ===== */
+
+.terminal-404 {
+  font-family: monospace;
+  max-width: 600px;
+  margin: 3em auto;
+  padding: 1.5em 2em;
+  border: 1px solid var(--border-general);
+  border-radius: 6px;
+  background: var(--background, #1b1b1b);
+}
+
+.terminal-404 .terminal-prompt {
+  color: var(--link);
+  margin-bottom: 0.5em;
+}
+
+.terminal-404 .terminal-output {
+  color: var(--text-dim);
+  margin-bottom: 1em;
+}
+
+.terminal-404 .terminal-cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1.1em;
+  background: var(--link);
+  animation: blink-cursor 1s step-end infinite;
+  vertical-align: text-bottom;
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.terminal-404 a {
+  color: var(--link);
+  text-decoration: underline;
+}
+
+/* ===== Table of Contents Sidebar ===== */
+
+/* Hidden by default, shown on wide screens */
+#tableOfContentContainer {
+  display: none;
+}
+
+@media screen and (min-width: 1200px) {
+  #tableOfContentContainer {
+    display: block;
+    position: fixed;
+    top: 80px;
+    left: 24px;
+    max-width: 260px;
+    width: auto;
+    z-index: 10;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+}
+
+#tableOfContentContainer::before {
+  content: "Contents";
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 1em;
+  padding-left: 14px;
+}
+
+#TableOfContents {
+  position: relative;
+  line-height: 1.6;
+  padding: 0;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  max-height: 80vh;
+  overflow-y: auto;
+  margin-left: 0;
+}
+
+#TableOfContents:hover {
+  opacity: 1;
+}
+
+#TableOfContents ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+#TableOfContents ul ul {
+  padding-left: 0;
+}
+
+#TableOfContents li {
+  position: relative;
+  max-width: 240px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#TableOfContents > ul > li {
+  margin-bottom: 4px;
+}
+
+/* Top-level links (h2) */
+#TableOfContents > ul > li > a {
+  display: block;
+  padding: 5px 12px 5px 14px;
+  border-left: 2px solid transparent;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Nested links (h3+) */
+#TableOfContents > ul > li > ul > li > a {
+  display: block;
+  padding: 4px 12px 4px 28px;
+  border-left: 2px solid transparent;
+  font-size: 0.9em;
+  color: var(--text-dim);
+  opacity: 0.8;
+  text-decoration: none;
+  transition: color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+#TableOfContents a:hover {
+  color: var(--link);
+  text-decoration: none;
+}
+
+#TableOfContents a:visited {
+  color: var(--text-dim);
+}
+
+#TableOfContents a:visited:hover {
+  color: var(--link);
+}
+
+/* Active TOC item — must beat .toc a and .toc a:visited from theme */
+.toc #TableOfContents a.active-toc,
+.toc #TableOfContents a.active-toc:visited {
+  color: var(--link);
+  border-left-color: var(--link);
+  font-weight: 600;
+  opacity: 1;
+}
