@@ -15,10 +15,14 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{ relURL "favicon-16x16.png" }}">
     <link rel="manifest" href="{{ relURL "site.webmanifest" }}">
 
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1b1b" />
+    <meta name="theme-color" content="#1b1b1b" />
 
-    <meta name="description" content="{{ .Title }}">
+    <meta name="description" content="{{ with .Params.summary }}{{ . }}{{ else }}{{ .Title }}{{ end }}">
+    <meta property="og:title" content="{{ .Title }}">
+    <meta property="og:description" content="{{ with .Params.summary }}{{ . }}{{ else }}{{ .Site.Title }}{{ end }}">
+    <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+    <meta property="og:url" content="{{ .Permalink }}">
+    <meta name="theme-color" content="#e06060">
 
     {{ with .OutputFormats.Get "rss" -}}
         {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
@@ -33,12 +37,7 @@
     <!-- Prevent flicker on page load. -->
     <style>
         :root {
-          --background: #ffffff;
-        }
-        @media (prefers-color-scheme: dark) {
-          :root {
-            --background: #1b1b1b;
-          }
+          --background: #1b1b1b;
         }
         html {
             background-color: var(--background);

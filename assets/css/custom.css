@@ -1,15 +1,24 @@
-/* ===== Theme Color Override ===== */
+/* ===== Force Dark Mode + Red Theme ===== */
 
 :root {
-  --link: #cc3333;
-  --link-visited: #b24a4a;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --link: #e06060;
-    --link-visited: #c47a7a;
-  }
+  --background: #1b1b1b;
+  --complimentary: #815205;
+  --text: #d8d8d8;
+  --code: #cbcbcb;
+  --text-dim: #a7a7a7;
+  --link: #e06060;
+  --link-visited: #c47a7a;
+  --code-background: #272727;
+  --code-border: transparent;
+  --code-hl: #5a5a5a;
+  --border-general: #495057;
+  --table-th: #414141;
+  --table-tr: #343434;
+  --toc-background: #343434;
+  --toc-border: #555;
+  --output-background: #3b3b3b;
+  --output-foreground: #d4a64e;
+  color-scheme: dark;
 }
 
 /* ===== Typography & Post Styling ===== */
